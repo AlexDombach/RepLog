@@ -45,6 +45,19 @@ export default function ActiveSession() {
   )
   const prById = useMemo(() => new Map(prs.map((p) => [p.exerciseId, p])), [prs])
 
+  /**
+   * Both profiles share one phone, so the header switcher can be tapped while
+   * someone else's workout is on screen. The sets would still save to the
+   * session's real owner, but it invites logging into the wrong person's
+   * workout — so bounce to your own home instead. Their session stays active
+   * and is resumable from there.
+   */
+  useEffect(() => {
+    if (session && profile && session.profileId !== profile.id) {
+      nav('/', { replace: true })
+    }
+  }, [session, profile, nav])
+
   const timer = useRestTimer({
     sound: profile?.soundEnabled ?? true,
     haptic: profile?.vibrationEnabled ?? true,

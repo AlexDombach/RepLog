@@ -109,7 +109,7 @@ export default function Home() {
               </p>
               <p className="font-bold truncate">{active.title}</p>
               <p className="text-xs text-muted mt-0.5 tabular-nums">
-                {completedSetCount(active)} sets ·{' '}
+                {completedSetCount(active)} set{completedSetCount(active) === 1 ? '' : 's'} ·{' '}
                 {formatElapsed(Date.now() - active.startedAt)}
               </p>
             </div>
