@@ -20,7 +20,8 @@ npm run dev
 Then open **http://localhost:5173/RepLog/** (the `/RepLog/` path matters — see
 `base` in `vite.config.ts`).
 
-Getting it onto a phone: **[DEPLOY.md](DEPLOY.md)**.
+**Live:** <https://alexdombach.github.io/RepLog/> — open that in Safari on the
+iPhone and use Share → Add to Home Screen. Full steps in **[DEPLOY.md](DEPLOY.md)**.
 
 | Command | What it does |
 |---|---|
