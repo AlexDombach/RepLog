@@ -69,20 +69,18 @@ export default function Home() {
 
           <div className="mt-5 flex items-end justify-between">
             <div>
-              <div className="flex items-baseline gap-2">
-                <span className="text-[11px] uppercase tracking-widest text-muted">
-                  Level
-                </span>
-                <span className="text-4xl font-black text-accent tabular-nums leading-none">
-                  {lvl.level}
-                </span>
+              <div className="text-4xl font-black text-accent tabular-nums leading-none">
+                {lvl.level}
+              </div>
+              <div className="text-[11px] uppercase tracking-widest text-muted mt-1.5">
+                Level
               </div>
             </div>
             <div className="text-right">
-              <div className="text-2xl font-bold tabular-nums leading-none">
+              <div className="text-4xl font-black tabular-nums leading-none">
                 {profile!.xp.toLocaleString()}
               </div>
-              <div className="text-[11px] uppercase tracking-widest text-muted mt-1">
+              <div className="text-[11px] uppercase tracking-widest text-muted mt-1.5">
                 Total XP
               </div>
             </div>
