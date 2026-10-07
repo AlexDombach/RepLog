@@ -1,0 +1,151 @@
+@import 'tailwindcss';
+
+/* ---------------------------------------------------------------
+   Design tokens. Dark is the default; `.theme-light` on <html>
+   flips them. One accent, high contrast, big type.
+   --------------------------------------------------------------- */
+@theme {
+  --color-ink: #0a0a0b; /* page background */
+  --color-surface: #141417; /* cards */
+  --color-surface-2: #1d1d22; /* raised / inputs */
+  --color-line: #2a2a31; /* hairlines */
+  --color-fg: #f4f4f5; /* primary text */
+  --color-muted: #8b8b96; /* secondary text */
+  --color-accent: #7af06e; /* the one accent */
+  --color-accent-ink: #06240a; /* text on accent */
+  --color-warn: #f0b429;
+  --color-danger: #f2555a;
+
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif;
+}
+
+html.theme-light {
+  --color-ink: #f7f7f8;
+  --color-surface: #ffffff;
+  --color-surface-2: #eeeef1;
+  --color-line: #dcdce2;
+  --color-fg: #0d0d10;
+  --color-muted: #5f5f6b;
+  --color-accent: #1f9c3f;
+  --color-accent-ink: #ffffff;
+}
+
+:root {
+  color-scheme: dark;
+}
+html.theme-light {
+  color-scheme: light;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-ink);
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  /* iOS: no rubber-band scroll of the whole shell, no tap flash, no text select */
+  overscroll-behavior-y: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+input,
+textarea {
+  user-select: text;
+}
+
+/* Inputs must be >=16px or iOS Safari zooms on focus. */
+input,
+select,
+textarea,
+button {
+  font-size: 16px;
+  font-family: inherit;
+}
+
+/* Hide number-input spinners — we use our own steppers. */
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+/* --- Safe-area helpers (iPhone notch / Dynamic Island / home indicator) --- */
+@utility pt-safe {
+  padding-top: env(safe-area-inset-top);
+}
+@utility pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+@utility px-safe {
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+/* --- Micro-interactions --- */
+@keyframes pop {
+  0% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.14);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@utility animate-pop {
+  animation: pop 320ms cubic-bezier(0.2, 0.9, 0.3, 1.4);
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@utility animate-rise {
+  animation: rise 260ms ease-out both;
+}
+
+@keyframes glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-accent) 55%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 10px color-mix(in srgb, var(--color-accent) 0%, transparent);
+  }
+}
+@utility animate-glow {
+  animation: glow 900ms ease-out 2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Scrollbars: keep them out of the way on desktop dev. */
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
