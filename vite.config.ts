@@ -29,11 +29,16 @@ export default defineConfig({
         orientation: 'portrait',
         scope: base,
         start_url: base,
+        // Explicit id helps iOS/Android identify this as one installable app
+        // rather than re-deriving it from start_url on every visit.
+        id: base,
+        // Absolute paths: relative ones resolve against the manifest URL, which
+        // is fine here but breaks the moment the manifest moves.
         icons: [
-          { src: 'icons/icon-192.png', sizes: '192x192', type: 'image/png' },
-          { src: 'icons/icon-512.png', sizes: '512x512', type: 'image/png' },
+          { src: `${base}icons/icon-192.png`, sizes: '192x192', type: 'image/png' },
+          { src: `${base}icons/icon-512.png`, sizes: '512x512', type: 'image/png' },
           {
-            src: 'icons/icon-maskable-512.png',
+            src: `${base}icons/icon-maskable-512.png`,
             sizes: '512x512',
             type: 'image/png',
             purpose: 'maskable',

@@ -486,6 +486,29 @@ function AboutSection() {
     window.matchMedia('(display-mode: standalone)').matches ||
     (navigator as unknown as { standalone?: boolean }).standalone === true
 
+  // Offline readiness: is a service worker controlling this page, and did it
+  // actually cache the app shell? Both must be true for airplane mode to work.
+  const [sw, setSw] = useState<{ registered: boolean; cached: number } | null>(null)
+  useEffect(() => {
+    let alive = true
+    ;(async () => {
+      try {
+        const regs = (await navigator.serviceWorker?.getRegistrations?.()) ?? []
+        const keys = (await caches?.keys?.()) ?? []
+        let cached = 0
+        for (const k of keys) cached += (await (await caches.open(k)).keys()).length
+        if (alive) setSw({ registered: regs.some((r) => !!r.active), cached })
+      } catch {
+        if (alive) setSw({ registered: false, cached: 0 })
+      }
+    })()
+    return () => {
+      alive = false
+    }
+  }, [])
+
+  const offlineReady = !!sw?.registered && sw.cached > 0
+
   return (
     <Section title="About">
       <dl className="space-y-2 text-sm">
@@ -493,15 +516,43 @@ function AboutSection() {
           <dt className="text-muted">Version</dt>
           <dd className="font-medium">RepLog 1.0</dd>
         </div>
-        <div className="flex justify-between">
-          <dt className="text-muted">Installed to home screen</dt>
-          <dd className="font-medium">{standalone ? 'Yes' : 'No'}</dd>
+        <div className="flex justify-between gap-4">
+          <dt className="text-muted">Launched fullscreen</dt>
+          <dd className={cx('font-medium', !standalone && 'text-warn')}>
+            {standalone ? 'Yes' : 'No — opened in a browser tab'}
+          </dd>
+        </div>
+        <div className="flex justify-between gap-4">
+          <dt className="text-muted">Cached for offline</dt>
+          <dd className={cx('font-medium', sw && !offlineReady && 'text-warn')}>
+            {sw === null
+              ? 'Checking…'
+              : offlineReady
+                ? `Yes — ${sw.cached} files`
+                : sw.registered
+                  ? 'Worker active, nothing cached yet'
+                  : 'No service worker'}
+          </dd>
         </div>
         <div className="flex justify-between">
           <dt className="text-muted">Network</dt>
           <dd className="font-medium">{online ? 'Online' : 'Offline — still fine'}</dd>
         </div>
       </dl>
+
+      {!standalone && (
+        <div className="mt-4 rounded-xl border border-warn/40 bg-warn/10 p-3">
+          <p className="text-sm font-semibold text-warn">Not installed yet</p>
+          <p className="text-xs text-muted mt-1.5 leading-relaxed">
+            You're in a browser tab. In <span className="text-fg">Safari</span>, tap
+            Share → <span className="text-fg">Add to Home Screen</span>, then launch
+            RepLog from the new icon. If the icon still opens with an address bar,
+            delete it, clear this site under Settings → Safari → Advanced → Website
+            Data, reload, and add it again.
+          </p>
+        </div>
+      )}
+
       <p className="text-xs text-muted mt-4 leading-relaxed">
         RepLog makes no network requests once it's loaded. Your workouts never leave
         this device.
